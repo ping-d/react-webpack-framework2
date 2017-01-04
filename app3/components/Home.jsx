@@ -22,10 +22,27 @@ const dataArr = [
     {id:"78",name:"a",value:"a"},
 ]
 var Home = React.createClass({
+    handleSelect:function(item){
+        console.log(item.name)
+    },
+    getInitialState:function(){
+        return {
+            dataArr:dataArr,
+        }
+    },
+    changeData:function(){
+        this.setState({
+            dataArr:[
+                {name:"goudan",value:"afd",id:"f"}
+            ]
+        });
+    },
     render:function(){
+        var {dataArr} = this.state;
         return (
             <div>
-              <SearchSelect dataArr={dataArr}/>
+                <button onClick={this.changeData}>click</button>
+              <SearchSelect dataArr={dataArr} width="300px" keyName="id" name="name" onSelect={this.handleSelect}/>
             </div>
         )
     }

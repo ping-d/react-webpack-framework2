@@ -2,6 +2,7 @@ $shadow-index:100;
 .search-select {
   width:200px;
   border:1px solid #c1c1c1;
+  border-radius:3px;
   p {
     margin:0;
     padding:0;
@@ -10,6 +11,9 @@ $shadow-index:100;
   .selection-wrap {
     width:200px;
     position: relative;
+  }
+  input {
+    font:inherit;
   }
   .big-shadow {
     position: fixed;
