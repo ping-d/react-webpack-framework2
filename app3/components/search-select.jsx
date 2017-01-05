@@ -76,6 +76,7 @@ const SearchSelect = React.createClass({
             searchItems:result
         })
     },
+
     /**
      * 根据关键字过滤数据
      * */
@@ -141,7 +142,7 @@ const SearchSelect = React.createClass({
                 <div className="selection-wrap" style={{width:this.props.width}}>
                     <div  className="content">
                         <div className="search">
-                            <input placeholder="搜索" onInput={this.handleInput}/>
+                            <input ref="searchInput" placeholder="搜索" onChange={this.handleInput} />
                         </div>
                         <ul>
                             {searchItems.map(function(item,index){
