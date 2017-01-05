@@ -65,19 +65,68 @@ webpackJsonp([2],{
 	var ViewImg = _react2.default.createClass({
 	    displayName: "ViewImg",
 
+	    getInitialState: function getInitialState() {
+	        return {
+	            initWidth: "", //图片最开始的宽度
+	            size: 1 };
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this.setState({
+	            initWidth: window.getComputedStyle(this.refs.img).width
+	        });
+	    },
+	    mousePositionStart: { //拖动之前的位置
+	        x: null,
+	        y: null,
+	        scrollTop: null,
+	        scrollLeft: null
+	    },
 	    close: function close() {
 	        this.props.onClose();
 	    },
+	    /**
+	     * 缩小
+	     * */
+	    shrink: function shrink() {
+	        var size = this.state.size;
+
+	        size -= 0.25;
+	        if (size < 1) {
+	            return;
+	        }
+	        this.setState({
+	            size: size
+	        });
+	    },
+	    /**
+	     * 放大
+	     * */
+	    magnify: function magnify(e) {
+	        var size = this.state.size;
+
+	        size += 0.25;
+	        if (size > 4) {
+	            return;
+	        }
+	        this.setState({
+	            size: size
+	        });
+	    },
 	    handleMouseDown: function handleMouseDown(e) {
 	        e.preventDefault();
+	        this.mousePositionStart = {
+	            x: e.clientX,
+	            y: e.clientY,
+	            scrollTop: this.refs.container.scrollTop,
+	            scrollLeft: this.refs.container.scrollLeft
+	        };
 	        var target = e.currentTarget;
 	        target.addEventListener("mousemove", this.mouseMove);
 	    },
 	    mouseMove: function mouseMove(e) {
 	        e.preventDefault();
-	        var x = e.movementX;
-	        var y = e.movementY;
-	        this.refs.container.scrollBy(-x, -y);
+	        this.refs.container.scrollTop = this.mousePositionStart.scrollTop + this.mousePositionStart.y - e.clientY;
+	        this.refs.container.scrollLeft = this.mousePositionStart.scrollLeft + this.mousePositionStart.x - e.clientX;
 	    },
 	    handleMouseUp: function handleMouseUp(e) {
 	        e.currentTarget.removeEventListener("mousemove", this.mouseMove);
@@ -88,7 +137,11 @@ webpackJsonp([2],{
 
 	    render: function render() {
 	        var url = this.props.url;
+	        var _state = this.state,
+	            initWidth = _state.initWidth,
+	            size = _state.size;
 
+	        var width = parseFloat(initWidth.substring(0, initWidth.length - 2)) * size + "px";
 	        return _react2.default.createElement(
 	            "div",
 	            { className: "show-big-img" },
@@ -98,16 +151,19 @@ webpackJsonp([2],{
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "control" },
+	                    _react2.default.createElement("span", { className: "close", onClick: this.close }),
+	                    _react2.default.createElement("span", { className: "big", onClick: this.magnify }),
+	                    _react2.default.createElement("span", { className: "small", onClick: this.shrink }),
 	                    _react2.default.createElement(
 	                        "span",
-	                        { onClick: this.close },
-	                        "\u5173\u95ED"
+	                        { className: "size" },
+	                        size * 100 + "%"
 	                    )
 	                ),
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "img-container", ref: "container" },
-	                    _react2.default.createElement("img", { src: url, onMouseDown: this.handleMouseDown, onMouseLeave: this.handleMouseLeave, onMouseUp: this.handleMouseUp })
+	                    _react2.default.createElement("img", { ref: "img", style: { width: width }, src: url, onMouseDown: this.handleMouseDown, onMouseLeave: this.handleMouseLeave, onMouseUp: this.handleMouseUp })
 	                )
 	            )
 	        );
@@ -152,7 +208,7 @@ webpackJsonp([2],{
 
 
 	// module
-	exports.push([module.id, ".show-big-img {\n  background-color: rgba(10, 10, 10, 0.5);\n  position: fixed;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0; }\n  .show-big-img .wrap {\n    position: relative;\n    width: 100%;\n    height: 100%; }\n  .show-big-img .img-container {\n    overflow: auto;\n    position: absolute;\n    top: 50px;\n    bottom: 0;\n    width: 100%; }\n    .show-big-img .img-container > img {\n      width: 800px;\n      height: auto;\n      display: block;\n      margin: 0 auto; }\n  .show-big-img .control {\n    height: 50px;\n    background-color: #000; }\n    .show-big-img .control > span {\n      float: right; }\n", ""]);
+	exports.push([module.id, ".show-big-img {\n  background-color: rgba(10, 10, 10, 0.7);\n  position: fixed;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0; }\n  .show-big-img .wrap {\n    position: relative;\n    width: 100%;\n    height: 100%; }\n  .show-big-img .img-container {\n    overflow: auto;\n    position: absolute;\n    top: 50px;\n    bottom: 0;\n    width: 100%; }\n    .show-big-img .img-container > img {\n      height: auto;\n      display: block;\n      margin: 0 auto; }\n  .show-big-img .control {\n    height: 50px;\n    background-color: #000;\n    color: #ddd;\n    padding-right: 50px; }\n    .show-big-img .control > span {\n      float: right;\n      display: inline-block;\n      width: 50px;\n      height: 50px;\n      background-repeat: no-repeat;\n      background-position: center center;\n      cursor: pointer; }\n      .show-big-img .control > span:hover {\n        background-color: #666666; }\n    .show-big-img .control .size {\n      line-height: 50px; }\n    .show-big-img .control .close {\n      background-image: url(\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+MTYvaTAwMjdfY2xvc2UtZGlhbG9nPC90aXRsZT48ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz48cGF0aCBkPSJNOS42NCA4bDQuMDE2IDQuMDE2Yy4yMy4yMy4zNDQuNTAyLjM0NC44MiAwIC4zMTgtLjExNS41OS0uMzQ0LjgyLS4yMy4yMy0uNTAyLjM0NC0uODIuMzQ0LS4zMTggMC0uNTktLjExNS0uODItLjM0NEw4IDkuNjRsLTQuMDE2IDQuMDE2Yy0uMjMuMjMtLjUwMi4zNDQtLjgyLjM0NC0uMzE4IDAtLjU5LS4xMTUtLjgyLS4zNDQtLjIzLS4yMy0uMzQ0LS41MDItLjM0NC0uODIgMC0uMzE4LjExNS0uNTkuMzQ0LS44Mkw2LjM2IDggMi4zNzQgNC4wMTZjLS4yMy0uMjMtLjM0NC0uNTAzLS4zNDQtLjgyIDAtLjMxOC4xMTYtLjU4Ny4zNDUtLjgwNS4yMy0uMjMuNTAzLS4zNC44Mi0uMzQuMzE4IDAgLjU5LjExMy44Mi4zNDNMOCA2LjM3Nmw0LjAzLTQuMDNjLjIzLS4yMy41MDQtLjM0NS44MjItLjM0NS4zMTcgMCAuNTkuMTE3LjgyLjM0Ni4yMi4yMy4zMjguNTAyLjMyOC44MiAwIC4zMTgtLjExLjU4Ni0uMzI4LjgwNUw5LjY0MiA4eiIgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+\"); }\n    .show-big-img .control .small {\n      background-image: url(\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCAxOSAxOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+U2xpY2UgMjwvdGl0bGU+PGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMSAxKSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNOS41IDYuMTdWNy4yaC02VjYuMTdoNnoiIGZpbGw9IiNmZmYiLz48cmVjdCBmaWxsPSIjZmZmIiB0cmFuc2Zvcm09InJvdGF0ZSg0NSAxMy42MTYgMTMuNDYyKSIgeD0iMTAuMTE2IiB5PSIxMi40NjIiIHdpZHRoPSI3IiBoZWlnaHQ9IjIuMDU3IiByeD0iMSIvPjxlbGxpcHNlIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBjeD0iNi41IiBjeT0iNi42ODYiIHJ4PSI2LjUiIHJ5PSI2LjY4NiIvPjwvZz48L3N2Zz4=\"); }\n    .show-big-img .control .big {\n      background-image: url(\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCAxOSAxOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+U2xpY2UgMjwvdGl0bGU+PGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMSAxKSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNNiAzLjZoMXYyLjU3aDIuNVY3LjJIN3YyLjU3SDZWNy4ySDMuNVY2LjE3SDZWMy42eiIgZmlsbD0iI2ZmZiIvPjxyZWN0IGZpbGw9IiNmZmYiIHRyYW5zZm9ybT0icm90YXRlKDQ1IDEzLjYxNiAxMy40NjIpIiB4PSIxMC4xMTYiIHk9IjEyLjQ2MiIgd2lkdGg9IjciIGhlaWdodD0iMi4wNTciIHJ4PSIxIi8+PGVsbGlwc2Ugc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEuMjUiIGN4PSI2LjUiIGN5PSI2LjY4NiIgcng9IjYuNSIgcnk9IjYuNjg2Ii8+PC9nPjwvc3ZnPg==\"); }\n", ""]);
 
 	// exports
 
