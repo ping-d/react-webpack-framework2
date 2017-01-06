@@ -99,9 +99,8 @@ const SearchSelect = React.createClass({
     matchRouter:function(kw,name){
         if(name.lastIndexOf(kw) === -1){
             return false;
-        }else{
-            return true;
         }
+            return true;
     },
     /**
     * 选择数据
