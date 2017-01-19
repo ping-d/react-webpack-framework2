@@ -75,6 +75,13 @@ webpackJsonp([2],{
 	            initWidth: window.getComputedStyle(this.refs.img).width
 	        });
 	    },
+	    onLoadImg: function onLoadImg(e) {
+	        alert("load");
+	        var width = window.getComputedStyle(this.refs.img).width;
+	        this.setState({
+	            initWidth: width
+	        });
+	    },
 	    mousePositionStart: { //拖动之前的位置
 	        x: null,
 	        y: null,
@@ -163,7 +170,7 @@ webpackJsonp([2],{
 	                _react2.default.createElement(
 	                    "div",
 	                    { className: "img-container", ref: "container" },
-	                    _react2.default.createElement("img", { ref: "img", style: { width: width }, src: url, onMouseDown: this.handleMouseDown, onMouseLeave: this.handleMouseLeave, onMouseUp: this.handleMouseUp })
+	                    _react2.default.createElement("img", { onLoad: this.onLoadImg, ref: "img", style: { width: width }, src: url, onMouseDown: this.handleMouseDown, onMouseLeave: this.handleMouseLeave, onMouseUp: this.handleMouseUp })
 	                )
 	            )
 	        );

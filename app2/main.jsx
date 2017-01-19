@@ -20,7 +20,7 @@ const Features = function(nextState,cb){
     })
 }
 render(
-    <Router history={hashHistory}>
+    <Router history={browserHistory}>
         <Route path='/' component={App}>
             <IndexRoute getComponent={Home} />
             <Route path='about' getComponent={About} />

@@ -7,9 +7,11 @@ const ViewImg = React.createClass({
             size:1,//图片的缩放比例
         }
     },
-    componentDidMount:function(){
+
+    onLoadImg:function(e){
+        var width = window.getComputedStyle(this.refs.img).width;
         this.setState({
-            initWidth:window.getComputedStyle(this.refs.img).width
+            initWidth:width
         })
     },
     mousePositionStart:{//拖动之前的位置
@@ -87,7 +89,7 @@ const ViewImg = React.createClass({
                         <span className="size">{size*100 + "%"}</span>
                     </div>
                     <div className="img-container" ref="container">
-                        <img ref="img" style={{width:width}} src={url} onMouseDown={this.handleMouseDown} onMouseLeave={this.handleMouseLeave}  onMouseUp={this.handleMouseUp}/>
+                        <img onLoad={this.onLoadImg} ref="img" style={{width:width}} src={url} onMouseDown={this.handleMouseDown} onMouseLeave={this.handleMouseLeave}  onMouseUp={this.handleMouseUp}/>
                     </div>
                 </div>
             </div>
